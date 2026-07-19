@@ -198,65 +198,119 @@ Gemini adalah AI dan dapat melakukan kesalahan.
 
 
 
-# Agent Communication & Execution Protocol (AGENTS.md)
+# Product Requirements Document (PRD)
 
-This protocol governs the engineering operations and communication strategies required when processing tasks for the **Travel Kuy Website System**. It must be strictly maintained by any AI Agent or developer working on the codebase.
+## Project Name: Travel Kuy Website System
 
-## 🛑 THE GOLDEN RULE OF EXECUTION
+### 1. Project Overview
+Building a monolithic web application using **Next.js (App Router)** and **Tailwind CSS**. This application serves as a Landing Page, Company Profile, and Booking Catalog System for the travel business "Travel Kuy".
 
-> **Execute tasks sequentially, exactly one at a time. Upon completing a single task, IMMEDIATELY HALT ALL EXECUTION. Do not move to the next task under any circumstance until explicit confirmation is provided by the user.**
+The booking system is designed to be safe and simple: Users view available slots, fill out a form, and the system redirects them to the Admin's WhatsApp with an automated message format. There is no online payment integration. Admins have a CRUD dashboard to manage trip packages and update remaining slots manually after deals are finalized via WhatsApp.
 
----
-
-## 📋 Communication Framework
-
-Upon finishing any single task, the agent must output a clean response containing the following structure:
-
-1.  **Status Confirmation:** State exactly which task has been completed.
-2.  **File Summary:** List all files created, modified, or prepared during the current step.
-3.  **Logical Breakdown:** Succinctly explain the core architectural logic, patterns, and framework utilities implemented.
-4.  **Halt & Await State:** Append a mandatory placeholder phrase asking the user for either a `"Lanjut"` (Proceed) or `"Rest"` (Pause) instruction before unlock.
+### 2. Tech Stack
+*   **Framework:** Next.js (App Router) with TypeScript
+*   **Styling:** Tailwind CSS
+*   **Database & Auth:** Supabase (PostgreSQL)
+*   **State Management:** React Hook Form (for booking forms)
 
 ---
 
-## 🛠️ Phase Checklist & Boundaries
+## 3. Detailed Task Requirements (Step-by-Step implementation)
 
-### TUGAS 1: Inisialisasi Proyek & Konfigurasi Supabase
-*   **Actionable Items:** Initialize App Router base, load npm modules (`@supabase/supabase-js`, `@supabase/ssr`, `react-hook-form`), build environment files, configure server/client singletons, export type systems.
-*   **Halt Hook:** Immediate stop after creating files inside `lib/supabase/` and `lib/types/`.
+### TASK 1: Project Initialization & Supabase Configuration
+*   **Description:** Setup project foundation and Supabase connection.
+*   **Specifications:**
+    *   Initialize Next.js project with App Router and Tailwind CSS.
+    *   Install dependencies: `@supabase/supabase-js`, `@supabase/ssr`, `react-hook-form`.
+    *   Create `.env.local` containing placeholders for `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+    *   Create folder `lib/supabase/` and prepare `client.ts` (Browser Client) and `server.ts` (Server Component Client) using `@supabase/ssr`.
+    *   Create `lib/types/index.ts` detailing TypeScript interfaces for the `trips` table:
+        *   `id` (string/uuid)
+        *   `title` (string)
+        *   `description` (string)
+        *   `price` (number)
+        *   `duration` (string)
+        *   `image_url` (string)
+        *   `max_slots` (number)
+        *   `available_slots` (number)
+        *   `whatsapp_number` (string)
 
-### TUGAS 2: Skema Database Supabase & Seeder
-*   **Actionable Items:** Compile plain SQL table structures with robust constraints, map out explicit RLS patterns separating public reading policies from administrative mutating queries, format three static raw seed arrays.
-*   **Halt Hook:** Immediate stop after compiling scripts within the `supabase/` root folder.
+### TASK 2: Supabase Database Schema & Seeder
+*   **Description:** Set up database schema and seed data.
+*   **Specifications:**
+    *   Create `supabase/schema.sql` defining the `trips` table matching Task 1 fields.
+    *   Configure Row Level Security (RLS) policies: Allow public read (anon), restrict write/update/delete operations to authenticated users only.
+    *   Create `supabase/seed.sql` containing 3 dummy trip entries (e.g., Open Trip Bromo, Open Trip Komodo, Private Tour Bali) with varying `available_slots`.
 
-### TUGAS 3: Layout Utama & Landing Page (Company Profile)
-*   **Actionable Items:** Modify global application containers, embed responsive layouts, compose landing hero elements, fill general copy blocks.
-*   **Halt Hook:** Immediate stop following full layout rendering validation.
+### TASK 3: Main Layout & Landing Page (Company Profile)
+*   **Description:** Build the core public-facing interface.
+*   **Specifications:**
+    *   Modify `app/layout.tsx` to include a persistent Header/Navbar (Logo "Travel Kuy", Menu: Home, Trips, Contact, Admin Login) and a Footer.
+    *   Build `app/page.tsx` (Landing Page) featuring:
+        *   **Hero Section:** Heading "Jelajahi Indonesia Bersama Travel Kuy" and a CTA button "Lihat Paket Trip" navigating to `/trips`.
+        *   **About Section:** Concise company profile background.
+        *   **Services/Features Section:** 3 visually clear feature cards (Paket Terlengkap, Guide Berpengalaman, Harga Terjangkau).
+    *   Ensure absolute responsiveness and clean styling via Tailwind CSS.
 
-### TUGAS 4: Halaman Katalog Trip (Public View)
-*   **Actionable Items:** Connect Server Side components directly to the public database collection, parse slot indicators, calculate button dynamic disabling states.
-*   **Halt Hook:** Immediate stop once grid rendering and slot depletion states are operational.
+### TASK 4: Trip Catalog Page (Public View)
+*   **Description:** Display available trips fetched dynamically from the database.
+*   **Specifications:**
+    *   Create `app/trips/page.tsx` as a Server Component.
+    *   Fetch data directly from the `trips` table in Supabase.
+    *   Display data inside a responsive Grid Card structure (Image, Title, Price, Duration).
+    *   Display remaining slot statuses clearly: `"Sisa Slot: X"` or `"Sold Out"` (if `available_slots === 0`).
+    *   Provide a "Booking Sekarang" button targeting `/trips/[id]/booking` if slots are available. Disable the button and mark as "Sold Out" if slots are depleted.
 
-### TUGAS 5: Halaman Form Booking & Logic Redirect WhatsApp
-*   **Actionable Items:** Set up responsive multi-input forms, run mathematical participant boundaries check against available slots, format URI string templates, dispatch dynamic redirection streams.
-*   **Halt Hook:** Immediate stop once client redirections test cleanly.
+### TASK 5: Booking Form Page & WhatsApp Redirect Logic
+*   **Description:** Core workflow translating web interest into direct WhatsApp messaging.
+*   **Specifications:**
+    *   Create `app/trips/[id]/booking/page.tsx` (Server Component) to fetch specific trip details using the dynamic ID.
+    *   Create a Client Component inside `app/trips/[id]/booking/BookingForm.tsx`.
+    *   Include form fields: Full Name, WhatsApp Number, and Number of Participants (validated against remaining `available_slots`).
+    *   Form Submission Flow via `react-hook-form`:
+        *   **Do NOT** save records into a database table.
+        *   Format message string: `Halo Admin Travel Kuy, saya [Nama] ingin booking trip [Judul Trip] untuk [Jumlah Peserta] orang. Apakah slot masih tersedia?`
+        *   Encode the text block via `encodeURIComponent`.
+        *   Open a new tab redirecting to `https://wa.me/[whatsapp_number_from_trip]?text=[encoded_text]`.
+        *   Display a successful message prompt on screen: `"Anda akan diarahkan ke WhatsApp. Silakan lanjutkan transaksi di sana."`
 
-### TUGAS 6: Admin Authentication (Supabase Auth)
-*   **Actionable Items:** Set up credential input schemas, orchestrate session handshakes, setup application request middleware guards intercepting `/admin/*` pathways.
-*   **Halt Hook:** Immediate stop once middleware rerouting rules apply cleanly to unauthenticated requests.
+### TASK 6: Admin Authentication (Supabase Auth)
+*   **Description:** Gateway access for administrators.
+*   **Specifications:**
+    *   Create `app/admin/login/page.tsx` with Email & Password input fields.
+    *   Leverage client-side Supabase Auth to execute the sign-in sequence.
+    *   On success, route to `/admin/dashboard`.
+    *   Configure a Next.js middleware (or comprehensive layout-level validation block) ensuring all `/admin/*` sub-routes require active authentication sessions; otherwise redirect instantly to `/admin/login`.
 
-### TUGAS 7: Admin Dashboard - Read & Delete Trips
-*   **Actionable Items:** Design structural management metrics tables, combine tabular presentation arrays, bind server-side execution procedures for records deletion.
-*   **Halt Hook:** Immediate stop when table items update following removal calls.
+### TASK 7: Admin Dashboard - Read & Delete Trips
+*   **Description:** Central operational grid for content management (Part 1).
+*   **Specifications:**
+    *   Create `app/admin/dashboard/page.tsx` (Protected Server Component).
+    *   Fetch comprehensive trip lists from Supabase.
+    *   Present contents within an ordered Tailwind data table containing: Title, Price, Max Slots, Available Slots, and Action Items.
+    *   Add a "Hapus" (Delete) action triggering a Server Action to securely remove the specified trip record by ID.
 
-### TUGAS 8: Admin Dashboard - Create Trip (Tambah Trip Baru)
-*   **Actionable Items:** Create multi-parameter data collection sheets, validate inputs, push newly declared items to Supabase collections.
-*   **Halt Hook:** Immediate stop upon verifying validation and automatic catalog inclusion.
+### TASK 8: Admin Dashboard - Create Trip
+*   **Description:** Capability to expand catalog offerings (Part 2).
+*   **Specifications:**
+    *   In the dashboard view, insert a prominent "Tambah Trip Baru" button targeting `/admin/dashboard/create`.
+    *   Develop `app/admin/dashboard/create/page.tsx`.
+    *   Compose a comprehensive form (using standard HTML actions or `useActionState`) mapping fully to the database schema (Title, Description, Price, Duration, Image URL, Max Slots, Available Slots).
+    *   Upon execution, submit fields, append row to Supabase, and revalidate/redirect to `/admin/dashboard`.
 
-### TUGAS 9: Admin Dashboard - Update Slots (Update Trip)
-*   **Actionable Items:** Build target parameter extraction logic, pre-populate inputs with structural trip metrics, run state persistence adjustments tracking available occupancy variables.
-*   **Halt Hook:** Immediate stop once internal data updates cascade cleanly to public views.
+### TASK 9: Admin Dashboard - Update Slots & Details
+*   **Description:** Crucial capability to modify available slots manually following confirmation via WhatsApp.
+*   **Specifications:**
+    *   On the dashboard grid table, add an "Edit" button matching each row.
+    *   Build out `app/admin/dashboard/edit/[id]/page.tsx`.
+    *   Render the form pre-filled with the corresponding row record.
+    *   Provide explicit inputs allowing granular edits to `available_slots` (e.g., deducting totals down manually when a WhatsApp customer converts) alongside general fields.
+    *   Process edits through a Server Action, update Supabase, and redirect back to `/admin/dashboard`.
 
-### TUGAS 10: Finalisasi, Komponen UI & Dokumentasi
-*   **Actionable Items:** Conduct cohesive style passes, structure interface placeholders, publish application execution logs inside local documentation structures.
-*   **Halt Hook:** Final submission review sequence.
+### TASK 10: UI Polish, State Handlers & Documentation
+*   **Description:** Quality assurance, visual refinements, and comprehensive user guidelines.
+*   **Specifications:**
+    *   Refine structural aesthetics across views guaranteeing uniform padding, color tokens, and text hierarchy.
+    *   Provide clear loading placeholders (spinners or skeletons) for asynchronous calls across public catalogs and forms.
+    *   Deliver a custom `app/not-found.tsx` catch-all template.
+    *   Draft a local operational guide (`README.md`) outlining environment setup, dev command executions (`npm run dev`), and systemic architectural design mappings.
