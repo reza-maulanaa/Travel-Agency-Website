@@ -16,7 +16,7 @@ export default async function TripsPage() {
   const list: Trip[] = trips ?? [];
 
   return (
-    <Section>
+    <Section className="bg-white">
       <div className="mx-auto max-w-2xl text-center">
         <Eyebrow>Katalog Trip</Eyebrow>
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
