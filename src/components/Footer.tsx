@@ -12,7 +12,7 @@ export default function Footer() {
           </p>
         </div>
         <div className="text-sm text-emerald-200">
-          <p>WhatsApp: 0812-3456-7890</p>
+          <p>WhatsApp: 0878-1116-5612</p>
           <p>Email: hello@travelkuy.id</p>
           <p className="mt-2 text-emerald-300">
             &copy; {new Date().getFullYear()} Travel Kuy. All rights reserved.

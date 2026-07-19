@@ -19,7 +19,7 @@ insert into public.trips (
   'https://images.unsplash.com/photo-1588666309990-d68f08e3d4a6?w=800',
   20,
   12,
-  '6281234567890'
+  '6287811165612'
 ),
 (
   'Open Trip Komodo',
@@ -29,7 +29,7 @@ insert into public.trips (
   'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
   15,
   0,
-  '6281234567890'
+  '6287811165612'
 ),
 (
   'Private Tour Bali',
@@ -39,5 +39,5 @@ insert into public.trips (
   'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800',
   10,
   5,
-  '6281234567890'
+  '6287811165612'
 );
