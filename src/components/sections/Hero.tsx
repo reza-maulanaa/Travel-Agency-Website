@@ -38,8 +38,8 @@ export default function Hero() {
             slot, dan lanjutkan ke WhatsApp admin dalam satu klik.
           </p>
 
-          <div className="mt-9 flex flex-wrap gap-3">
-            <ButtonLink href="/trips" size="lg">
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <ButtonLink href="/trips" size="lg" className="w-full justify-center sm:w-auto">
               Lihat Paket Trip
               <ArrowRight className="h-4 w-4" />
             </ButtonLink>
@@ -49,6 +49,7 @@ export default function Hero() {
               size="lg"
               target="_blank"
               rel="noopener noreferrer"
+              className="w-full justify-center sm:w-auto"
             >
               <MessageCircle className="h-4 w-4" />
               Hubungi Admin

@@ -21,7 +21,7 @@ const principles = [
 
 export default function About() {
   return (
-    <Section className="grid items-center gap-12 lg:grid-cols-2 bg-white">
+    <Section className="bg-white" containerClassName="grid items-center gap-12 lg:grid-cols-2">
       {/* Narrative */}
       <div>
         <Eyebrow>Tentang Kami</Eyebrow>
