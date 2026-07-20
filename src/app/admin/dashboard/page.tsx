@@ -23,7 +23,7 @@ export default async function AdminDashboardPage() {
   const list: Trip[] = trips ?? [];
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 bg-white">
       <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">
