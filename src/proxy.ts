@@ -30,15 +30,16 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
-  const isLoginPage = pathname === "/admin/login";
+  const isAuthPage =
+    pathname === "/admin/login" || pathname === "/admin/register";
 
-  // Sudah login tapi masih di halaman login -> arahkan ke dashboard
-  if (user && isLoginPage) {
+  // Sudah login tapi masih di halaman auth -> arahkan ke dashboard
+  if (user && isAuthPage) {
     return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 
-  // Belum login dan bukan di halaman login -> wajib login
-  if (!user && !isLoginPage && pathname.startsWith("/admin")) {
+  // Belum login dan bukan di halaman auth -> wajib login
+  if (!user && !isAuthPage && pathname.startsWith("/admin")) {
     return NextResponse.redirect(new URL("/admin/login", request.url));
   }
 
