@@ -31,3 +31,4 @@ export default async function BookingPage({
     </section>
   );
 }
+console.log("omaga")
